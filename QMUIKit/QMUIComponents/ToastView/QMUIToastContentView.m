@@ -88,7 +88,9 @@
     
     if (hasCustomView) {
         width = MIN(maxContentWidth, MAX(width, CGRectGetWidth(self.customView.frame)));
-//        height += (CGRectGetHeight(self.customView.frame) + ((hasTextLabel || hasDetailTextLabel) ? self.customViewMarginBottom : 0));
+        if (!hasTextLabel && !hasDetailTextLabel) {
+            height += CGRectGetHeight(self.customView.frame);
+        }
     }
     
     if (hasTextLabel) {
