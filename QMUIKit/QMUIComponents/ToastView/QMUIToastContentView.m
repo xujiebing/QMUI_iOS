@@ -88,23 +88,33 @@
     
     if (hasCustomView) {
         width = MIN(maxContentWidth, MAX(width, CGRectGetWidth(self.customView.frame)));
-        height += (CGRectGetHeight(self.customView.frame) + ((hasTextLabel || hasDetailTextLabel) ? self.customViewMarginBottom : 0));
+//        height += (CGRectGetHeight(self.customView.frame) + ((hasTextLabel || hasDetailTextLabel) ? self.customViewMarginBottom : 0));
     }
     
     if (hasTextLabel) {
+//        CGSize textLabelSize = [self.textLabel sizeThatFits:CGSizeMake(maxContentWidth, maxContentHeight)];
+//        width = MIN(maxContentWidth, MAX(width, textLabelSize.width));
+//        height += (textLabelSize.height + (hasDetailTextLabel ? self.textLabelMarginBottom : 0));
+        
         CGSize textLabelSize = [self.textLabel sizeThatFits:CGSizeMake(maxContentWidth, maxContentHeight)];
-        width = MIN(maxContentWidth, MAX(width, textLabelSize.width));
+        width = MIN(maxContentWidth, textLabelSize.width + width + (hasCustomView ? 8 : 0));
         height += (textLabelSize.height + (hasDetailTextLabel ? self.textLabelMarginBottom : 0));
     }
     
     if (hasDetailTextLabel) {
+//        CGSize detailTextLabelSize = [self.detailTextLabel sizeThatFits:CGSizeMake(maxContentWidth, maxContentHeight)];
+//        width = MIN(maxContentWidth, MAX(width, detailTextLabelSize.width));
+//        height += (detailTextLabelSize.height + self.detailTextLabelMarginBottom);
+        
         CGSize detailTextLabelSize = [self.detailTextLabel sizeThatFits:CGSizeMake(maxContentWidth, maxContentHeight)];
-        width = MIN(maxContentWidth, MAX(width, detailTextLabelSize.width));
+        width = MIN(maxContentWidth, MAX(width, detailTextLabelSize.width + width + (hasCustomView ? 8 : 0)));
         height += (detailTextLabelSize.height + self.detailTextLabelMarginBottom);
     }
     
     width += UIEdgeInsetsGetHorizontalValue(self.insets);
     height += UIEdgeInsetsGetVerticalValue(self.insets);
+    
+    height = MAX(height, self.minimumSize.height);
     
     if (shouldConsiderMinimumSize) {
         width = MAX(width, self.minimumSize.width);
@@ -121,17 +131,21 @@
     BOOL hasTextLabel = self.textLabel.text.length > 0;
     BOOL hasDetailTextLabel = self.detailTextLabel.text.length > 0;
     
-    CGFloat contentLimitWidth = self.qmui_width - UIEdgeInsetsGetHorizontalValue(self.insets);
+    CGFloat contentLimitWidth = self.qmui_width - UIEdgeInsetsGetHorizontalValue(self.insets) - self.customView.qmui_width - (hasCustomView ? 8 : 0);
     CGSize contentSize = [self sizeThatFits:self.bounds.size shouldConsiderMinimumSize:NO];
     CGFloat minY = self.insets.top + CGFloatGetCenter(self.qmui_height - UIEdgeInsetsGetVerticalValue(self.insets), contentSize.height - UIEdgeInsetsGetVerticalValue(self.insets));
     if (hasCustomView) {
-        self.customView.qmui_left = self.insets.left + CGFloatGetCenter(contentLimitWidth, self.customView.qmui_width);
-        self.customView.qmui_top = minY;
-        minY = self.customView.qmui_bottom + self.customViewMarginBottom;
+//        self.customView.qmui_left = self.insets.left + CGFloatGetCenter(contentLimitWidth, self.customView.qmui_width);
+//        self.customView.qmui_top = minY;
+//        minY = self.customView.qmui_bottom + self.customViewMarginBottom;
+        
+        self.customView.qmui_left = self.insets.left;
+        self.customView.qmui_top = (self.qmui_height-self.customView.qmui_height)/2.0;
     }
     if (hasTextLabel) {
         CGSize textLabelSize = [self.textLabel sizeThatFits:CGSizeMake(contentLimitWidth, CGFLOAT_MAX)];
-        self.textLabel.qmui_left = self.insets.left;
+//        self.textLabel.qmui_left = self.insets.left;
+        self.textLabel.qmui_left = self.insets.left + self.customView.qmui_width + (hasCustomView ? 8 : 0);
         self.textLabel.qmui_top = minY;
         self.textLabel.qmui_width = contentLimitWidth;
         self.textLabel.qmui_height = textLabelSize.height;
@@ -139,10 +153,13 @@
     }
     if (hasDetailTextLabel) {
         CGSize detailTextLabelSize = [self.detailTextLabel sizeThatFits:CGSizeMake(contentLimitWidth, CGFLOAT_MAX)];
-        self.detailTextLabel.qmui_left = self.insets.left;
+//        self.detailTextLabel.qmui_left = self.insets.left;
+        self.detailTextLabel.qmui_left = self.insets.left + self.customView.qmui_width + (hasCustomView ? 8 : 0);
         self.detailTextLabel.qmui_top = minY;
         self.detailTextLabel.qmui_width = contentLimitWidth;
         self.detailTextLabel.qmui_height = detailTextLabelSize.height;
+    } else {
+        self.textLabel.qmui_top = (self.qmui_height-self.textLabel.qmui_height)/2.0;
     }
 }
 
