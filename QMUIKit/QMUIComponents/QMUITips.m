@@ -162,13 +162,13 @@ const NSInteger QMUITipsAutomaticallyHideToastSeconds = -1;
 + (NSTimeInterval)smartDelaySecondsForTipsText:(NSString *)text {
     NSUInteger length = text.qmui_lengthWhenCountingNonASCIICharacterAsTwo;
     if (length <= 20) {
-        return 1.5;
-    } else if (length <= 40) {
-        return 2.0;
-    } else if (length <= 50) {
         return 2.5;
-    } else {
+    } else if (length <= 40) {
         return 3.0;
+    } else if (length <= 50) {
+        return 3.5;
+    } else {
+        return 4.0;
     }
 }
 
