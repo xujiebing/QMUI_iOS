@@ -351,7 +351,7 @@ static NSMutableArray <QMUIToastView *> *kToastViews = nil;
     }
     NSMutableArray *toastViews = [[NSMutableArray alloc] init];
     for (UIView *toastView in kToastViews) {
-        if (toastView.superview == view && [toastView isKindOfClass:self]) {
+        if (toastView.superview == view && [toastView isKindOfClass:QMUIToastView.class]) {
             [toastViews addObject:toastView];
         }
     }
